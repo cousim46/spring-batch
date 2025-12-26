@@ -138,7 +138,7 @@ CREATE TABLE BATCH_JOB_EXECUTION_CONTEXT (
 - SERIALIZED_CONTEXT : 직렬화 된 전체 컨텍스트
 
 ### BATCH_STEP_EXECUTION_CONTEXT Table
-- Step의 ExecutionContext와 관련된 모든정볼르 가집니다.
+- Step의 ExecutionContext와 관련된 모든 정보를 가집니다.
 - StepExecution 마다 정확히 하나의 ExecutionContext가 있고 특정 Step Execution에 대해서 저장될 필요가 있는 모든 데이터를 저장합니다.
 - 일반적으로 JobInstance가 중단된 위치에서 시작할 수 있도록 실패 후 검색해야 하는 상태를 나타냅니다.
 
