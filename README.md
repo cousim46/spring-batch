@@ -4,7 +4,7 @@
 
 ### BATCH_JOB_INSTANCE Table
 - 배치 잡 인스턴스 테이블
-- 배치가 수행되면 Job이 생성이되고, 해당 Job 인스턴스에 대해서 관련된 모든 정볼르 가진 최상위 테이블
+- 배치가 수행되면 Job이 생성이되고, 해당 Job 인스턴스에 대해서 관련된 모든 정보를 가진 최상위 테이블
 ```sql
 CREATE TABLE BATCH_JOB_INSTANCE (
     JOB_INSTANCE_ID BIGINT PRIMARY KEY ,
