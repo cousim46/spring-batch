@@ -186,3 +186,14 @@ CREATE TABLE BATCH_STEP_EXECUTION_CONTEXT(
     - 배치 Job execution 시퀄스를 구별하는 유니크 PK
 
 - 위 시퀀스들을 통해 BATCH_JOB_INSTANCE, BATCH_EXECUTION, BATCH_STEP_EXECUTION의 시퀀스를 배치가 할당하며, 중복될 수 없습니다.
+
+
+## 스프링 배치 모델
+- 스프링 배치는 DI와 AOP를 지원하는 배치 프레임워크입니다.
+- 모델
+  - Tasklet
+    - 로직 자체가 단수한 경우에 사용하는 단순 처리 모델
+    - 다양한 데이터 소스나 파일을 한번에 처리해야하는 경우 사용.
+  - Chunk
+    - 데이터 량이 매우 큰 경우 효과적으로 처리 가능
+    - Reader/Processor/Writer 플로우 방식으로 처리
