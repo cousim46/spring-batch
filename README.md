@@ -228,3 +228,48 @@ CREATE TABLE BATCH_STEP_EXECUTION_CONTEXT(
 - JobRepository
   - Job과 Step의 상태를 관리하는 시스템
   - 스프링 배치에서 사용하는 테이블 스키마를 기반으로 상태정보를 저장하고 관리
+
+## 스프링 배치 흐름
+
+![img.png](스프링%20배치%20흐름.png)
+
+### 처리흐름 관점
+1. JobScheduler가 배치를 트리거링 하면 JobLauncher를 실행합니다.
+2. JobLauncher는 Job을 실행핣니다. 이때 JobExecution을 수행하고 Execution Context 정보를 이용합니다.
+3. Job은 자신에게 설정된 Step을 실행합니다. 이때 StepExecution을 수행하고 Execution Context 정보가 전달되어 수행됩니다.
+4. Step은 Tasklet과 Chunk 모델을 가지고 있으며 위 그림에서는 Chunk 모델로 수행되게 됩니다.
+5. ItemReader를 통해서 소스 데이터를 읽습니다.
+6. ItemProcessor를 통해서 읽은 청크 단위 데이터를 처리합니다. 처리는 데이터를 변환 또는 가공하는 역할을 합니다.
+7. ItemWriter은 처리된 청크 데이터를 쓰기 작업합니다. 다양한 Writer를 통해 데이터베이스에 저장하거나 파일로 쓰는 역할을 합니다.
+
+### Job 정보의 흐름 관점
+1. JobLauncher는 JobRepository를 통해서 JobInstance 정보를 데이터베이스에 등록합니다.
+2. JobLauncher는  Job Execution을 통해 Job을 수행하고 JobRepository를 통해 실행 정보를 데이터베이스에 저장합니다.
+3. JobStep은 JobRepository를 통해서 I/O 레코드와 상태정보를 저장합니다.
+4. Job이 완료되면 JobRepository를 통해서 데이터베이스에 완료 정보를 저장합니다.
+
+### 스프링배치 저장 정보
+- JobInstance
+  - Job 이름과 전달 파라미터를 정의합니다.
+  - Job이 중단되는 경우 다음 실행할때 중단 이후부터 실행하도록 지원합니다.
+  - Job이 재실행을 지원하지 않는 경우 또는 성공적으로 처리된 경우 배치를 재실행한다면 중복 수행되지 않도록 종료합니다.
+- JobExecution / ExecutionContext
+  - JobExecution
+    - Job의 물리적인 실행을 나타냅니다.
+    - JobInstance와 달리 동일한 Job이 여러번 수행될 수 있습니다.
+    - JobInstance와 JobExecution은 1:N 관계가 됩니다.
+  - ExecutionContext
+    - 각각의 JobExecution에서 처리 단계와 같은 메타 정보들을 공유하는 영역입니다.
+    - 주로 스프링 배치가 프레임워크 상태를 기록하는데 사용하며 애플리케이션에서 ExecutionContext에 엑세스하는 수단도 제공됩니다.
+    - ExecutionContext에 저장되는 객체는 java.io.Serialized를 구현하는 클래스이어야합니다.
+- StepExecution / ExecutionContext
+  - StepExecution
+    - Step을 물리적인 실행을 나타냅니다.
+    - Job은 여러 Step을 수행하므로 1 : N 관계가 됩니다.
+  - ExecutionContext
+    - Step 내부에 데이터를 공유해야하는 공유 영역입니다.
+    - 데이터의 지역화 관점에서 여러 단계에 공유할 필요 없는 정보는 Job내 ExecutionContext를 이용하는 대신에 Step 단계 내의 ExecutionContext를 사용해야합니다.
+    - StepExeuctionContext에 저장되는 데이터는 반드시 java.io.Serialized를 구현하는 클래스이어야합니다.
+- JobRepository
+  - JobExecution과 StepExecution등과 같이 배치 실행정보, 상태, 결과정보들을 데이터베이스에 저장하는 역할입니다.
+  - 스프링 배치를 수행하기 위해서 배치 실행정보, 상태, 결과정보를 저장할 데이터베이스가 필요하고 저장된 정보를 활용하여 배치 잡을 재실행하거나 정지된 상태 후부터 수행할 수 있는 수단을 제공합니다.
