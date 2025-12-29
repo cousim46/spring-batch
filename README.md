@@ -197,3 +197,34 @@ CREATE TABLE BATCH_STEP_EXECUTION_CONTEXT(
   - Chunk
     - 데이터 량이 매우 큰 경우 효과적으로 처리 가능
     - Reader/Processor/Writer 플로우 방식으로 처리
+
+## 스프링 배치 기본 아키텍처
+
+![img.png](스프링%20배치%20아키텍처.png)
+
+- Job
+  - 일괄 적용을 위한 일련의 프로세스를 요약하는 단일 실행 단위
+- Step
+  - Job을 구성하는 처리 단위
+  - 하나의 Job에는 여러 Step 구성 가능
+  - 하나의 Job에 여러 Step을 재사용, 병렬화, 조건 분기 등을 수행 가능
+  - Step은 Tasklet 모델, Chunk 모델의 구현체가 탑재 되어 실행
+- JobLauncher
+  - Job을 수행하기 위한 인터페이스
+  - JobLauncher은 사용자에 의해 직접 수행
+  - 자바 커맨드를 통해 CommandLineJobRunner를 실행하여 단순하게 배치 프로세스 수행 가능.
+- ItemReader
+  - 청크단위 모델에서 사용
+  - 소스 데이터를 읽어 들이는 역할 수행
+- ItemProcessor
+  - 읽어 들인 청크 데이터를 처리
+  - 데이터 변환 또는 데이터를 정재하는 등의 역할을 담당
+  - 옵션으로 필요없다면 사용하지 않아도 됨.
+- ItemWriter
+  - 청크 데이터를 읽어들였거나, 처리된 데이터에 대해서 실제 쓰기 작업을 담당
+  - 데이터베이스에 저장 및 수정 또는 파일로 처리결과 출력
+- Tasklet
+  - 단순하고 유연하게 배치 처리를 수행하는 태스크를 수행
+- JobRepository
+  - Job과 Step의 상태를 관리하는 시스템
+  - 스프링 배치에서 사용하는 테이블 스키마를 기반으로 상태정보를 저장하고 관리
