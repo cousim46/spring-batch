@@ -317,3 +317,18 @@ CREATE TABLE BATCH_STEP_EXECUTION_CONTEXT(
 - CompositeItemProcessor
   - 동일한 입력 데이터에 대해 여러 ItemProcessor를 순차적으로 실행합니다.
   - ValidatingItemProcessor를 사용하여 입력 확인을 수행한 . 비즈니스 로직을 실행하려는 경우 활성화 됩니다.
+
+## ItemWriter 제공하는 구현체
+- FlatFileWriter
+  - 처리된 Java 객체를 CSV 파일과 같은 플랫 파일로 작성합니다.
+  - 파일 라인에 대한 매핑 규칙은 구분 기호 및 개체에서 사용자 정의로 사용할 수도 있습니다.
+- StaxEventItemWriter
+  - XML 파일로 자바 객체를 쓸 수 있습니다.
+- JdbcBatchItemWriter
+  - Jdbc를 사용하여 자바 객체를 데이터베이스에 저장할 수 있습니다.
+  - 내부적으로 JdbcTemplate을 사용하게 됩니다.
+- MyBatisBatchItemWriter
+  - MyBatis를 사용하여 자바 객체를 데이터베이스에 저장할 수 있습니다.
+  - MyBatis-Spring은 MyBatis에서 제공하는 라이브러리를 이용합니다.
+- JmsItemWriter / AmqpItemWriter
+  - JMS 또는 AMQP로 자바 객체의 메시지를 전송합니다.
