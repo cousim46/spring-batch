@@ -286,4 +286,23 @@ CREATE TABLE BATCH_STEP_EXECUTION_CONTEXT(
 - ChunkBaseTasklet은 청크 단위에 따라 ItemReader, ItemProcessor, ItemWriter를 반복 실행합니다.
 - ItemReader은 청크 단위 만큼 데이터를 읽고 ItemProcessor로 전달하여 ItemProcessor이 데이터를 처리합니다.
 - 처리하고 난 청크 단위의 데이터는 ItemWriter로 전달되어 데이터가 저장되거나 파일 처리 작업을 수행합니다.
-- 
+
+
+## ItemReader
+- FlatFileItemReader
+  - 플랫 파(구조화 되지 않은 파일)을 읽습니다. e.g) CSV
+  - 읽어 들인 데이터를 객체로 매핑하기 위해서 delimeter를 기준으로 매핑 룰을 이용하여 객체로 매핑합니다.
+  - 입력에 대해서 Resource Object를 이용하여 커스텀하게 매핑 할 수 있습니다.
+- StaxEventItemReader
+  - XML 파일 StAX기반으로 읽습니다.
+- JdbcPagingItemReader / JdbcCursorItemReader
+  - Jdbc를 사용하여 SQL을 실행하여 나온 데이터를 읽습니다.
+  - 데이터베이스에서 많은 양의 데이터를 처리해야 하는 경우에는 메모리에 있는 모든 레코드를 읽는 것을 피하고, 한 번의 처리에 필요한 데이터만 읽고 폐기하는 것이 필요하다.
+  - JdbcPagingItemReader는 JdbcTemplate을 이용하여 페이징 처리하는 방식으로 구현됩니다.
+  - JdbcCursorItemReader는 JDBC 커서를 이용하여 하나의 SELECT SQL을 발행하여 구현됩니다.
+- MyBatisPagingItemReader / MyBatisCursorItemReader
+  - MyBatis를 이용하여 데이터를 읽습니다.
+  - JdbcCursorItemReader, JdbcPagingItemReader와 구현 방식만 다를 뿐 동일합니다.
+  - Jpa를 이용해서 데이터를 읽어올 수 있는 방법으로 JpaPagingItemReader, HibernatePagingItemReader, HibernateCursor제공합니다.
+- JmsItemReader / AmqpItemReader
+  - 메시지를 JMS혹은 AMQP에서 읽어들입니다.
