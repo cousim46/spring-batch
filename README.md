@@ -306,3 +306,14 @@ CREATE TABLE BATCH_STEP_EXECUTION_CONTEXT(
   - Jpa를 이용해서 데이터를 읽어올 수 있는 방법으로 JpaPagingItemReader, HibernatePagingItemReader, HibernateCursor제공합니다.
 - JmsItemReader / AmqpItemReader
   - 메시지를 JMS혹은 AMQP에서 읽어들입니다.
+
+## ItemProcessor 제공하는 구현체
+- PassThroughItemProcessor
+  - 아무 작업을 수행하지 않아 입력된 데이터의 변경 또는 처리가 필요하지 않는 경우에 사용합니다.
+- ValidatingItemProcessor
+  - 입력된 데이터를 체크합니다.
+  - 입력된 데이터 유효성 검증 규칙을 구현하려면 batch에서 제공하는 org.springframework.batch.item.Validator를 구현해야합니다.
+  - 일반적으로 org.springframework.validation.Validator의 어댑터인 SpringValidator와 org.springframework.validation의 규칙을 제공합니다.
+- CompositeItemProcessor
+  - 동일한 입력 데이터에 대해 여러 ItemProcessor를 순차적으로 실행합니다.
+  - ValidatingItemProcessor를 사용하여 입력 확인을 수행한 . 비즈니스 로직을 실행하려는 경우 활성화 됩니다.
