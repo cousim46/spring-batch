@@ -288,7 +288,7 @@ CREATE TABLE BATCH_STEP_EXECUTION_CONTEXT(
 - 처리하고 난 청크 단위의 데이터는 ItemWriter로 전달되어 데이터가 저장되거나 파일 처리 작업을 수행합니다.
 
 
-## ItemReader
+## ItemReader 제공하는 구현체
 - FlatFileItemReader
   - 플랫 파(구조화 되지 않은 파일)을 읽습니다. e.g) CSV
   - 읽어 들인 데이터를 객체로 매핑하기 위해서 delimeter를 기준으로 매핑 룰을 이용하여 객체로 매핑합니다.
