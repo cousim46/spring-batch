@@ -273,3 +273,17 @@ CREATE TABLE BATCH_STEP_EXECUTION_CONTEXT(
 - JobRepository
   - JobExecution과 StepExecution등과 같이 배치 실행정보, 상태, 결과정보들을 데이터베이스에 저장하는 역할입니다.
   - 스프링 배치를 수행하기 위해서 배치 실행정보, 상태, 결과정보를 저장할 데이터베이스가 필요하고 저장된 정보를 활용하여 배치 잡을 재실행하거나 정지된 상태 후부터 수행할 수 있는 수단을 제공합니다.
+
+## Chunk 모델
+- 일정한 단위(청크)로 데이터를 처리하는 방식입니다.
+- ChunkOrientedTasklet은 청크 처리를 지원하는 Tasklet의 구현체입니다.
+- commit-interval 설정값을 통해서 청크에 포함 될 최대 레코드 수를 조정할 수 있습니다.
+- ItemReader, ItemProcessor, ItemWriter은 청크 단위를 처리하기 위한 인터페이스입니다.
+
+![img.png](Chunk모델%20처리과정.png)
+
+- ChunkBaseTasklet은 ItemReader, ItemProcessor, ItemWriter 구현체를 각각 호출합니다.
+- ChunkBaseTasklet은 청크 단위에 따라 ItemReader, ItemProcessor, ItemWriter를 반복 실행합니다.
+- ItemReader은 청크 단위 만큼 데이터를 읽고 ItemProcessor로 전달하여 ItemProcessor이 데이터를 처리합니다.
+- 처리하고 난 청크 단위의 데이터는 ItemWriter로 전달되어 데이터가 저장되거나 파일 처리 작업을 수행합니다.
+- 
