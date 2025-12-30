@@ -274,6 +274,22 @@ CREATE TABLE BATCH_STEP_EXECUTION_CONTEXT(
   - JobExecution과 StepExecution등과 같이 배치 실행정보, 상태, 결과정보들을 데이터베이스에 저장하는 역할입니다.
   - 스프링 배치를 수행하기 위해서 배치 실행정보, 상태, 결과정보를 저장할 데이터베이스가 필요하고 저장된 정보를 활용하여 배치 잡을 재실행하거나 정지된 상태 후부터 수행할 수 있는 수단을 제공합니다.
 
+## Tasklet 모델
+- Chunk 모델과 다르게 하나의 레코드만 읽어서 처리해야하는 경우에 Tasklet 모델을 사용합니다.
+- 청크 단위로 처리하는게 알맞지 않을 경우에 Tasklet 모델이 유용합니다.
+- Tasklet 모델을 사용할때 Spring Batch에서 제공하는 Tasklet 인터페이스를 구현해야합니다.
+
+
+## Tasklet 구현 클래스
+- SystemCommandTasklet
+  - 시스템 명령어를 비동기적으로 실행하는 구현체입니다.
+  - 명령어를 지정하여 사용할 수 있고 시스템 명령은 호출하는 스레드와 다른 스레드에 의해 실행되므로 실행되는 도중 타임아웃을 설정하고 시스템 명령을 수행하는 스레드를 취소할 수 있습니다.
+- MethodInvokingTaskletAdapter
+  - POJO 클래스의 특정 메서드를 실행하기 위한 Tasklet 구현체입니다.
+  - targetObject 속성에 클래스의 빈을 지정하고, targetMethod 속성에 실행할 메소드 이름을 지정합니다.
+  - POJO 클래스는 일괄 처리 종료 상태를 메서드의 반환값으로 반환이 가능하지만 ExitStatus를 반환값으로 설정해야합니다.
+  - 다른 타입의 값이 반환될 경우 반환값과 상관없이 정상종료(COMPLETED) 상태로 간주됩니다.
+
 ## Chunk 모델
 - 일정한 단위(청크)로 데이터를 처리하는 방식입니다.
 - ChunkOrientedTasklet은 청크 처리를 지원하는 Tasklet의 구현체입니다.
@@ -333,18 +349,4 @@ CREATE TABLE BATCH_STEP_EXECUTION_CONTEXT(
 - JmsItemWriter / AmqpItemWriter
   - JMS 또는 AMQP로 자바 객체의 메시지를 전송합니다.
 
-## Tasklet 모델
-- Chunk 모델과 다르게 하나의 레코드만 읽어서 처리해야하는 경우에 Tasklet 모델을 사용합니다.
-- 청크 단위로 처리하는게 알맞지 않을 경우에 Tasklet 모델이 유용합니다.
-- Tasklet 모델을 사용할때 Spring Batch에서 제공하는 Tasklet 인터페이스를 구현해야합니다.
 
-
-## Tasklet 구현 클래스
-- SystemCommandTasklet
-  - 시스템 명령어를 비동기적으로 실행하는 구현체입니다.
-  - 명령어를 지정하여 사용할 수 있고 시스템 명령은 호출하는 스레드와 다른 스레드에 의해 실행되므로 실행되는 도중 타임아웃을 설정하고 시스템 명령을 수행하는 스레드를 취소할 수 있습니다.
-- MethodInvokingTaskletAdapter
-  - POJO 클래스의 특정 메서드를 실행하기 위한 Tasklet 구현체입니다.
-  - targetObject 속성에 클래스의 빈을 지정하고, targetMethod 속성에 실행할 메소드 이름을 지정합니다.
-  - POJO 클래스는 일괄 처리 종료 상태를 메서드의 반환값으로 반환이 가능하지만 ExitStatus를 반환값으로 설정해야합니다.
-  - 다른 타입의 값이 반환될 경우 반환값과 상관없이 정상종료(COMPLETED) 상태로 간주됩니다.
