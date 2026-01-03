@@ -1,4 +1,4 @@
-package com.example.springbatch.reader;
+package com.example.springbatch.flatfile.reader;
 
 public class Customer {
     private String name;

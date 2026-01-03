@@ -1,4 +1,4 @@
-package com.example.springbatch.reader;
+package com.example.springbatch.flatfile.reader;
 
 import java.io.IOException;
 import java.io.Writer;

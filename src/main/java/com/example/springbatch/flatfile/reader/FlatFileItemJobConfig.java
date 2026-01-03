@@ -1,6 +1,6 @@
-package com.example.springbatch.reader;
+package com.example.springbatch.flatfile.reader;
 
-import com.example.springbatch.processor.AggregateCustomerProcessor;
+import com.example.springbatch.flatfile.processor.AggregateCustomerProcessor;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
