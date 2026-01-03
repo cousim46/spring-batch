@@ -350,3 +350,40 @@ CREATE TABLE BATCH_STEP_EXECUTION_CONTEXT(
   - JMS 또는 AMQP로 자바 객체의 메시지를 전송합니다.
 
 
+## FlatFileItemReader
+- Spring Batch에서 제공하는 기본적인 ItemReader로 텍스트 파일로부터 데이터를 읽습니다.
+- 고정 길이, 구분자 기반, 멀티 라인 등 다양한 형식의 텍스트 파일을 지원합니다.
+- 설정 및 사용이 간편하고 대규모 데이터 처리에도 효율적입니다.
+- 토큰 나이저, 필터 등을 통해 기능을 확장할 수 있습니다.
+- 장점으로는 간단하고 효율적인 구현, 다양한 텍스트 파일 형식을 지원
+- 단점으로는 복잡한 데이터 구조 처리에는 부적합
+
+## FlatFileItemReader 구성 요소
+- Resource : 읽을 텍스트 파일을 지정
+- LineMapper : 텍스트 파일의 각 라인을 Item으로 변환하는 역할
+- LineTokenizer : 텍스트 파일의 각 라인을 토큰으로 분리하는 역할
+- FieldSetMapper : 토큰을 Item 속성에 매핑하는 역할
+- SkippableLineMapper : 오류 발생 시 해당 라인을 건너뛸 수 있게 하는 역할
+- LineCallbackHandler : 라인별로 처리를 수행할 수 있도록 해주는 역할
+- ReadListener : 읽기 시작, 종료, 오류 발생 등의 이벤트를 처리할 수 있도록 해주는 역할
+
+```java
+@Bean
+public FlatFileItemReader<Item 객체> flatFileItemReader() {
+    return new FlatFileItemReader<Item 객체>()
+          .name("flatFileItemReader")
+          .resource(new ClassPathResource("파일경로/파일명"))
+          .encoding("utf-8")
+          .delimited()
+          .delimiter("구분자")
+          .names("요소1", "요소2")
+          .targetType("Item 객체")
+          .build();
+}
+```
+- resource : 클래스 패스 내부에 존재하는 파일을 읽습니다.
+- encoding : 파일 데이터의 인코딩을 추가
+- delimited : 구분자로 설정 되어 있는것을 의미
+- delimiter : 구분자 설정
+- names : 구분자로 구분된 데이터 이름 지정
+- targetType : 구분된 데이터를 어떤 모델(객체)에 넣을지 클래스 타입을 지정 
